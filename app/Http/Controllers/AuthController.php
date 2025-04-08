@@ -111,4 +111,40 @@ class AuthController extends Controller
             'user' => $user
         ]);
     }
+    // In App\Http\Controllers\AdminController.php
+
+public function getPendingVerifications()
+{
+    // Only admin users should access this
+    
+    $pendingUsers = User::where('is_verified', false)->get();
+    
+    return response()->json([
+        'status' => 'success',
+        'data' => $pendingUsers
+    ]);
+}
+
+public function updateVerificationStatus(Request $request, $id)
+{
+    // Only admin users should access this
+    // if (!auth()->user() || auth()->user()->role !== 'admin') {
+    //     return response()->json(['message' => 'Unauthorized'], 403);
+    // }
+    
+    $request->validate([
+        'is_verified' => 'required|boolean'
+    ]);
+    
+    $user = User::findOrFail($id);
+    $user->is_verified = $request->is_verified;
+    $user->save();
+    
+    return response()->json([
+        'status' => 'success',
+        'data' => $user,
+        'message' => $request->is_verified ? 'User has been verified' : 'User verification has been rejected'
+    ]);
+}
+
 }

@@ -24,7 +24,7 @@ class MembershipPlan extends Model
         'is_active' => 'boolean',
     ];
 
-    public function userMemberships()
+    public function Memberships()
     {
         return $this->hasMany(Membership::class);
     }

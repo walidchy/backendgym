@@ -17,6 +17,8 @@ use App\Http\Controllers\MemberController;
 use App\Http\Controllers\ProfileController;
 
 // Public routes
+Route::delete('/membership-plans/{plan}', [MembershipController::class, 'destroy']);
+
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/members', [MemberController::class, 'index']);
@@ -27,7 +29,14 @@ Route::get('/equipment', [EquipmentController::class, 'index']);
 Route::get('/membership-plans', [MembershipController::class, 'index']);
 Route::get('memberships', [MembershipController::class, 'index']);
 Route::get('/settings', [SettingController::class, 'index']);
-Route::get('/member/bookings ', [BookingController::class, 'index']);
+Route::delete('/equipment/{equipment}', [EquipmentController::class, 'destroy']);
+Route::delete('/activities/{activity}', [ActivityController::class, 'destroy']);
+Route::get('/my-membership', [MembershipController::class, 'getMembership']);
+
+
+
+ Route::get('/admin/verifications', [AuthController::class, 'getPendingVerifications']);
+    Route::put('/admin/users/{id}/verify', [AuthController::class, 'updateVerificationStatus']);
 
 // Protected routes - requires authentication
 Route::middleware('auth:sanctum')->group(function () {
@@ -62,6 +71,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/activities/{activity}/schedules/{schedule}', [ActivityController::class, 'removeSchedule']);
     
     // Bookings
+    Route::get('/member/bookings ', [BookingController::class, 'index']);
 
     Route::post('/bookings', [BookingController::class, 'store']);
     Route::get('/bookings/{booking}', [BookingController::class, 'show']);
@@ -71,8 +81,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // Memberships
 
     Route::get('/membership-plans/{plan}', [MembershipController::class, 'show']);
-    Route::get('/my-membership', [MembershipController::class, 'getMembership']);
-    Route::post('/subscribe', [MembershipController::class, 'subscribe']);
     
     // Attendance
     Route::post('/bookings/{booking}/attendance', [AttendanceController::class, 'store']);
@@ -96,7 +104,6 @@ Route::middleware('auth:sanctum')->group(function () {
         // Manage activities (create, update, delete)
         Route::post('/activities', [ActivityController::class, 'store']);
         Route::put('/activities/{activity}', [ActivityController::class, 'update']);
-        Route::delete('/activities/{activity}', [ActivityController::class, 'destroy']);
     });
     
     // Admin routes
@@ -111,12 +118,10 @@ Route::middleware('auth:sanctum')->group(function () {
         // Membership plans management
         Route::post('/membership-plans', [MembershipController::class, 'store']);
         Route::put('/membership-plans/{plan}', [MembershipController::class, 'update']);
-        Route::delete('/membership-plans/{plan}', [MembershipController::class, 'destroy']);
         
         // Equipment management
         Route::post('/equipment', [EquipmentController::class, 'store']);
         Route::put('/equipment/{equipment}', [EquipmentController::class, 'update']);
-        Route::delete('/equipment/{equipment}', [EquipmentController::class, 'destroy']);
         
         // Settings
         Route::put('/settings/{key}', [SettingController::class, 'update']);
