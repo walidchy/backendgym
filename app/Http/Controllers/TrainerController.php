@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Activity;
 
 class TrainerController extends Controller
 {
@@ -156,4 +158,18 @@ class TrainerController extends Controller
 
         return response()->json(['message' => 'Trainer deleted successfully']);
     }
+    public function myActivities()
+    {
+        $user = auth()->user();
+    
+    
+        // Use user's ID because trainer_id in the activities table points to users.id
+        $activities = Activity::where('trainer_id', $user->id)->get();
+    
+        return response()->json([
+            'activities' => $activities, 'id' => $user->id,
+            'user' => $user
+        ]);
+    }
+    
 }

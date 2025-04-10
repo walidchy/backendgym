@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class ActivityController extends Controller
 {
     
+    
     public function index(Request $request)
 {
     $query = Activity::with('trainer');

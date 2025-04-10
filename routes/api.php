@@ -32,7 +32,10 @@ Route::get('/settings', [SettingController::class, 'index']);
 Route::delete('/equipment/{equipment}', [EquipmentController::class, 'destroy']);
 Route::delete('/activities/{activity}', [ActivityController::class, 'destroy']);
 Route::get('/my-membership', [MembershipController::class, 'getMembership']);
+Route::get('/trainer/availability', [UserController::class, 'getAvailability']);
+Route::get('/payments', [PaymentController::class, 'index']);
 
+Route::post('/activities', [ActivityController::class, 'store']);
 
 
  Route::get('/admin/verifications', [AuthController::class, 'getPendingVerifications']);
@@ -49,6 +52,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::post('/logout', [AuthController::class, 'logout']);
     // members
+    Route::get('/trainers/activities', [TrainerController::class, 'myActivities']);
 
     Route::post('/members', [MemberController::class, 'store']);
     Route::get('/members/{member}', [MemberController::class, 'show']);
@@ -98,11 +102,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Trainer routes
     Route::middleware('role:trainer,admin')->group(function () {
         // Trainer availability
-        Route::get('/trainer/availability', [UserController::class, 'getAvailability']);
         Route::post('/trainer/availability', [UserController::class, 'updateAvailability']);
         
         // Manage activities (create, update, delete)
-        Route::post('/activities', [ActivityController::class, 'store']);
         Route::put('/activities/{activity}', [ActivityController::class, 'update']);
     });
     
@@ -127,7 +129,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/settings/{key}', [SettingController::class, 'update']);
         
         // Payment management
-        Route::get('/payments', [PaymentController::class, 'index']);
         Route::get('/payments/{payment}', [PaymentController::class, 'show']);
     });
 });
